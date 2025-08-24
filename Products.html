@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="css/styles.css"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=search"/>
+  <title>Product Page</title>
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+  <img src="assets/images/AeroLogo.png" alt="Logo" class="logo">
+  <form action="">
+    <div class="search">
+      <span class="search-icon material-symbols-outlined">search</span>
+      <input class="search-input" type="search" name="" id="" placeholder="Search">
+    </div>
+  </form>
+  <a href="uploadimage.html">
+  <button class="upload-btn"> Make Post </button>
+  </a>
+<button class="profile-btn" id="profileBtn" style="display:none; margin-left:16px;">
+  <img id="profileIcon" class="profile-pic" style="width:32px;height:32px;margin:0;vertical-align:middle;object-fit:cover;border-radius:50%;border:none;background:#e7e7e7;">
+  <span id="signInText" style="display:none;">Sign In</span>
+</button>
+</nav>
+</header>
+
+  <!-- Navigation Bar -->
+  <ul>
+    <li><a href="home.html">| Home |</a></li>
+    <li><a href="contact.html">| Contact |</a></li>
+    <li><a href="news.html">| News |</a></li>
+    <li><a href="about.html">| About |</a></li>
+    <li><a href="leaderstats.html">| Leaderboards |</a></li>
+    <li><a href="sale.html">| Art For Sale |</a></li>
+    <li><a href="review.html">| Reviews |</a></li>
+    <li><a href="otherproducts.html">| Other Products |</a></li>
+  </ul>
+
+  <br />
+
+  <div class="container">
+    <div class="image">
+<img id="productImage" src="https://picsum.photos/seed/0/400/600" alt="Product Image" class="responsive-product-image">    </div>
+
+<div class="text">
+  <h1>Art Title Placeholder</h1>
+  <p>Short Description Placeholder</p>
+  <div id="hashtags"></div>
+  <ul></ul>
+  <p>From User: </p>
+
+<button onclick="react()">Like</button>
+<p id="like-count">Likes: <span id="like-count-value">0</span></p>
+
+<script>
+  const productId = document.getElementById('productImage').src;
+
+  const reactedKey = 'reacted-' + productId;
+  const countKey = 'count-' + productId;
+
+  function react() {
+    if (localStorage.getItem(reactedKey)) {
+      alert("You already reacted to this product.");
+      return;
+    }
+
+    localStorage.setItem(reactedKey, 'true');
+
+    let count = parseInt(localStorage.getItem(countKey) || '0', 10);
+    count += 1;
+    localStorage.setItem(countKey, count);
+
+    document.getElementById('like-count-value').textContent = count;
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const count = localStorage.getItem(countKey) || '0';
+    document.getElementById('like-count-value').textContent = count;
+  });
+</script>
+
+</body>
+</html>
+
+<textarea id="commentInput" rows="4" cols="50" placeholder="Write a comment..."></textarea><br>
+  <button onclick="addComment()">Post Comment</button>
+  <button onclick="resetComments()">Reset Comments</button>
+
+  <div class="comment-box" id="commentBox" style="margin-top: 20px;"></div>
+
+
+ <script>
+  // Load comments from localStorage
+  window.onload = function () {
+    loadComments();
+  };
+
+  function addComment() {
+    const input = document.getElementById('commentInput');
+    const comment = input.value.trim();
+
+    if (comment === "") return;
+
+    let comments = JSON.parse(localStorage.getItem("comments")) || [];
+    comments.push(comment);
+    localStorage.setItem("comments", JSON.stringify(comments));
+
+    input.value = "";
+    loadComments();
+  }
+
+  function loadComments() {
+    const commentBox = document.getElementById('commentBox');
+    commentBox.innerHTML = "";
+
+    let comments = JSON.parse(localStorage.getItem("comments")) || [];
+
+    comments.forEach(comment => {
+      const div = document.createElement('div');
+      div.className = 'comment';
+      div.textContent = comment;
+      commentBox.appendChild(div);
+    });
+  }
+
+  function resetComments() {
+    localStorage.removeItem("comments");   // Remove from localStorage
+    document.getElementById('commentBox').innerHTML = ""; // Clear UI
+  }
+
+</script>
+
+</script>
+</div>
+<script>
+function setProfileIcon() {
+  const profileIcon = document.getElementById("profileIcon");
+  if (profileIcon) {
+    const pic = localStorage.getItem("profilePic");
+    profileIcon.src = pic ? pic : "assets/images/default-profile.png";
+  }
+}
+document.addEventListener("DOMContentLoaded", function() {
+  const profileBtn = document.getElementById("profileBtn");
+  const profileIcon = document.getElementById("profileIcon");
+  const signInText = document.getElementById("signInText");
+  const userEmail = localStorage.getItem("userEmail");
+
+  setProfileIcon();
+
+  if (userEmail) {
+    profileBtn.style.display = "inline-block";
+    profileIcon.style.display = "inline";
+    signInText.style.display = "none";
+    profileBtn.onclick = function() {
+      window.location.href = "profile.html";
+    };
+  } else {
+    profileBtn.style.display = "inline-block";
+    profileIcon.style.display = "none";
+    signInText.style.display = "inline";
+    profileBtn.onclick = function() {
+      window.location.href = "loginpage.html";
+    };
+  }
+});
+</script>
+<script>
+// Helper to get query parameters
+function getQueryParam(name) {
+  const url = new URL(window.location.href);
+  return url.searchParams.get(name);
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const userImageId = getQueryParam('userImageId');
+  const imageSrc = getQueryParam('imageSrc');
+  const title = getQueryParam('title');
+  const desc = getQueryParam('desc');
+
+  const img = document.getElementById('productImage');
+  const titleElem = document.querySelector('.text h1');
+  const descElem = document.querySelector('.text p');
+
+  if (userImageId) {
+    // Load from localStorage
+    const data = JSON.parse(localStorage.getItem(userImageId));
+    if (data) {
+      img.src = data.src;
+      titleElem.textContent = data.title || "Untitled";
+      descElem.textContent = data.desc || "";
+      // Optionally update hashtags and uploader
+      if (data.hashtags && Array.isArray(data.hashtags)) {
+        const hashtagsElem = document.getElementById('hashtags');
+        hashtagsElem.innerHTML = "";
+        data.hashtags.forEach(tag => {
+          const span = document.createElement('span');
+          span.className = 'hashtag';
+          span.textContent = tag;
+          hashtagsElem.appendChild(span);
+        });
+      }
+      if (data.email) {
+        const userElem = descElem.nextElementSibling;
+        if (userElem) userElem.textContent = "From User: " + data.email;
+      }
+    }
+  } else if (imageSrc) {
+    // Use query params for default images
+    img.src = decodeURIComponent(imageSrc);
+    titleElem.textContent = title || "Untitled";
+    descElem.textContent = desc || "";
+  }
+});
+</script>
+</body>
+</html>

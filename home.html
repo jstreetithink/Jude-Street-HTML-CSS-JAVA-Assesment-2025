@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home</title>
+<body>
+<header>
+
+    
+    
+<nav class="navbar">
+  <img src="assets/images/AeroLogo.png" alt="Logo" class="logo">
+  <form action="">
+    <div class="search">
+      <span class="search-icon material-symbols-outlined">search</span>
+      <input class="search-input" type="search" name="" id="" placeholder="Search">
+    </div>
+  </form>
+  <a href="uploadimage.html">
+  <button class="upload-btn"> Make Post </button>
+  </a>
+<button class="profile-btn" id="profileBtn" style="display:none;">
+  <img id="profileIcon" class="profile-pic">
+  <span id="signInText" style="display:none;">Sign In</span>
+</button>
+</button>
+</nav>
+</header>
+
+<link rel="stylesheet"href="css/styles.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=search" />
+<link rel="icon" type="image/x-icon" href="assets/images/AeroLogo.png">
+
+<!-- Nav Bar -->
+
+<ul>
+<li><a href="home.html">| Home |</a></li>
+<li><a href="contact.html">| Contact |</a></li>
+<li><a href="news.html">| News |</a></li>
+<li><a href="about.html">| About |</a></li>
+<li><a href="leaderstats.html">| Leaderboards |</a></li>
+<li><a href="sale.html">| Art For Sale |</a></li>
+<li><a href="review.html">| Reviews |</a></li>
+<li><a href="otherproducts.html">| Other Products |</a></li>
+</ul>
+<br>
+<br>
+
+</head>
+<body>
+
+  <div class="hero-banner">
+  <div class="hero-content">
+    <button class="hero-btn">Explore</button>
+    <h1>Aero</h1>
+    <p>Aero has the power to move you. Aero has everything you need to inspire your next project and discover new artists.</p>
+  </div>
+</div>
+
+<div class="explore-section">
+  <h5>Featured Articles</h5>
+  <div class="explore-cards">
+    <div class="explore-card">
+      <img src="assets/images/green1.jpg" alt="Sketchbooking" />
+      <div class="explore-card-text">
+        <span class="explore-card-sub">Aero</span>
+        <span class="explore-card-title">Lorem ipsum dolor sit amet, consectetur adipiscing elit</span>
+      </div>
+    </div>
+    <div class="explore-card">
+      <img src="assets/images/green2.jpg" alt="Summer road trip" />
+      <div class="explore-card-text">
+        <span class="explore-card-sub">Aero</span>
+        <span class="explore-card-title">Lorem ipsum dolor sit amet, consectetur adipiscing elit</span>
+      </div>
+    </div>
+    <div class="explore-card">
+      <img src="assets/images/green3.jpg" alt="Stacked ear" />
+      <div class="explore-card-text">
+        <span class="explore-card-sub">Aero</span>
+        <span class="explore-card-title">Lorem ipsum dolor sit amet, consectetur adipiscing elit</span>
+      </div>
+    </div>
+  </div>
+</div>
+    
+</div>
+  <!-- Featured Posts -->
+  <h5>Featured Posts</h5>
+  <hr class="section-divider">
+  <div class="gallery featured" id="featuredGallery"></div>
+<hr class="section-divider">
+  <!-- Infinite Scroll Section -->
+  <h5>Browse By Category </h5>
+<div class="category-grid">
+  <button onclick="location.href='art.html'" style="background-image: url('assets/images/');" class="button" style="vertical-align:middle"><span>Art</span></button>
+  <button onclick="location.href='illustration.html'" class="button" style="vertical-align:middle"><span>Illustration</span></button>
+  <button onclick="location.href='nature.html'" class="button" style="vertical-align:middle"><span>Nature</span></button>
+  <button onclick="location.href='portrait.html'"class="button" style="vertical-align:middle"><span>Portraits</span></button>
+  <button onclick="location.href='Fashion.html'"class="button" style="vertical-align:middle"><span>Fashion</span></button>
+  <button onclick="location.href='digital.html'"class="button" style="vertical-align:middle"><span>Digital Art</span></button>
+  <button onclick="location.href='photo.html'" class="button" style="vertical-align:middle"><span>Photos</span></button>
+  <button onclick="location.href='media.html'" class="button" style="vertical-align:middle"><span>Media</span></button>
+  <button onclick="location.href='streetart.html'" class="button" style="vertical-align:middle"><span>Street Art</span></button>
+  <button onclick="location.href='abstract.html'" class="button" style="vertical-align:middle"><span>Abstract</span></button>
+</div>
+  <hr class="section-divider">
+    <h5>Explore More </h5>
+  <div class="gallery infinite" id="infiniteGallery"></div>
+  <div id="loader" class="loader"></div>
+  
+
+ <script>
+    const featuredGallery = document.getElementById("featuredGallery");
+const infiniteGallery = document.getElementById("infiniteGallery");
+const loader = document.getElementById("loader");
+
+
+const loadMoreBtn = document.createElement("button");
+loadMoreBtn.textContent = "Load More";
+loadMoreBtn.className = "load-more";
+loadMoreBtn.style.display = "none";
+loader.parentNode.insertBefore(loadMoreBtn, loader.nextSibling);
+
+let infinitePage = 0;
+const perPage = 6;
+let loadedCount = 0;
+const batchSize = 48;
+
+function getUserImageSrc(id) {
+  // id starts from 0, so add 1 for userImage-1, userImage-2, etc.
+  const userImg = localStorage.getItem('userImage-' + (id + 1));
+  if (userImg) {
+    try {
+      const data = JSON.parse(userImg);
+      return data.src;
+    } catch {
+      // fallback if parsing fails
+      return `https://picsum.photos/seed/${id}/400/600`;
+    }
+  }
+  return `https://picsum.photos/seed/${id}/400/600`;
+}
+
+function createArtElement(index) {
+    const container = document.createElement("div");
+    container.className = "art-item";
+
+    const link = document.createElement("a");
+    let imgSrc = '', title = '', desc = '', userImageId = '', hashtags = [], uploaderEmail = '';
+    const userImgData = localStorage.getItem('userImage-' + (index + 1));
+    let isUserImage = false;
+    let data = {};
+
+    if (userImgData) {
+        try {
+            data = JSON.parse(userImgData);
+            imgSrc = data.src;
+            title = data.title || '';
+            desc = data.desc || '';
+            hashtags = Array.isArray(data.hashtags) ? data.hashtags : [];
+            uploaderEmail = data.email || '';
+            userImageId = 'userImage-' + (index + 1);
+            link.href = `Products.html?userImageId=${encodeURIComponent(userImageId)}`;
+            isUserImage = true;
+        } catch {
+            imgSrc = `https://picsum.photos/seed/${index}/400/600`;
+            link.href = `Products.html?imageSrc=${encodeURIComponent(imgSrc)}&title=&desc=`;
+        }
+    } else {
+        imgSrc = `https://picsum.photos/seed/${index}/400/600`;
+        link.href = `Products.html?imageSrc=${encodeURIComponent(imgSrc)}&title=&desc=`;
+    }
+    link.className = "product-link";
+
+    const img = document.createElement("img");
+    img.src = imgSrc;
+    img.alt = title ? title : `Art Piece #${index + 1}`;
+    link.appendChild(img);
+    container.appendChild(link);
+
+    // Add title, hashtags, and made by only for user images
+    if (isUserImage) {
+        if (title) {
+            const titleElem = document.createElement("div");
+            titleElem.className = "art-title";
+            titleElem.textContent = title;
+            container.appendChild(titleElem);
+        }
+        if (hashtags.length) {
+            const hashtagsElem = document.createElement("div");
+            hashtagsElem.className = "art-hashtags";
+            hashtags.forEach(tag => {
+                const tagElem = document.createElement("span");
+                tagElem.className = "hashtag";
+                tagElem.textContent = tag;
+                hashtagsElem.appendChild(tagElem);
+            });
+            container.appendChild(hashtagsElem);
+        }
+        if (uploaderEmail) {
+            const madeByElem = document.createElement("div");
+            madeByElem.className = "art-madeby";
+            madeByElem.textContent = "Made by: " + uploaderEmail;
+            container.appendChild(madeByElem);
+        }
+    }
+
+    return container;
+}
+
+// Load first 4 featured items
+// Only show Picsum images in featured posts
+for (let i = 0; i < 4; i++) {
+    const container = document.createElement("div");
+    container.className = "art-item";
+    const link = document.createElement("a");
+    const imgSrc = `https://picsum.photos/seed/featured${i}/400/600`;
+    link.href = `Products.html?imageSrc=${encodeURIComponent(imgSrc)}&title=&desc=`;
+    link.className = "product-link";
+    const img = document.createElement("img");
+    img.src = imgSrc;
+    img.alt = `Featured Art Piece #${i + 1}`;
+    link.appendChild(img);
+    container.appendChild(link);
+    featuredGallery.appendChild(container);
+}
+
+
+// Load more infinite items
+function loadMoreInfinite(batch = perPage) {
+    const nextUserId = parseInt(localStorage.getItem('nextUserImageId') || '1', 10) - 1;
+    let loaded = 0;
+    let galleryIndex = loadedCount;
+
+    while (loaded < batch) {
+        let artElem;
+        // First, show all user images (once)
+        if (galleryIndex < nextUserId) {
+            artElem = createArtElement(galleryIndex, true);
+        } else {
+            // Then, show Picsum images (start after user images)
+            artElem = createArtElement(galleryIndex, false);
+        }
+        if (artElem) {
+            infiniteGallery.appendChild(artElem);
+            loaded++;
+        }
+        galleryIndex++;
+    }
+    loadedCount = galleryIndex;
+}
+
+const observer = new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting) {
+        loadMoreInfinite();
+    }
+}, {
+    threshold: 1
+});
+
+observer.observe(loader);
+
+if (!loader.getBoundingClientRect || loader.getBoundingClientRect().top > window.innerHeight) {
+    loadMoreInfinite(); 
+}
+
+loadMoreBtn.addEventListener("click", () => {
+    loadMoreBtn.style.display = "none";
+    observer.observe(loader);
+    loadMoreInfinite();
+});
+</script>
+
+<footer class="site-footer">
+  <div class="pagebuttons">
+  <a href="#">&laquo;</a>
+  <a href="#">1</a>
+  <a href="#">2</a>
+  <a href="#">3</a>
+  <a href="#">4</a>
+  <a href="#">5</a>
+  <a href="#">6</a>
+  <a href="#">&raquo;</a>
+</div>
+  <p>&copy; 2025 Aero Art. All rights reserved. is what i would say if i owned it but nope</p>
+  <p> all images on site are copyright and royalty free</p>
+</footer>
+
+<script>
+function setProfileIcon() {
+  const profileIcon = document.getElementById("profileIcon");
+  if (profileIcon) {
+    const pic = localStorage.getItem("profilePic");
+    profileIcon.src = pic ? pic : "assets/images/default-profile.png";
+  }
+}
+document.addEventListener("DOMContentLoaded", function() {
+  const profileBtn = document.getElementById("profileBtn");
+  const profileIcon = document.getElementById("profileIcon");
+  const signInText = document.getElementById("signInText");
+  const userEmail = localStorage.getItem("userEmail");
+
+  setProfileIcon();
+
+  if (userEmail) {
+    profileBtn.style.display = "inline-block";
+    profileIcon.style.display = "inline";
+    signInText.style.display = "none";
+    profileBtn.onclick = function() {
+      window.location.href = "profile.html";
+    };
+  } else {
+    profileBtn.style.display = "inline-block";
+    profileIcon.style.display = "none";
+    signInText.style.display = "inline";
+    profileBtn.onclick = function() {
+      window.location.href = "loginpage.html";
+    };
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Spotify Stats Tracker</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Spotify Stats Tracker</h1>
+    <button id="loginBtn">Login with Spotify</button>
+    <div id="stats" class="hidden">
+      <h2>Your Top Tracks</h2>
+      <ul id="trackList"></ul>
+    </div>
+  </div>
+
+  <script>
+   const clientId = 'dcab7fa97d694b12b46450e678062b51';
+const redirectUri = 'https://judestreet139-glitch.github.io'
+const scope = 'user-top-read';
+
+document.getElementById("loginBtn").onclick = () => {
+  const authUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=token&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}`;
+  window.location.href = authUrl;
+};
+
+// On page load, check for token in URL
+window.onload = () => {
+  const hash = window.location.hash;
+  if (hash.includes('access_token')) {
+    const token = new URLSearchParams(hash.slice(1)).get('access_token');
+    document.getElementById("loginBtn").style.display = "none";
+    document.getElementById("stats").classList.remove("hidden");
+    fetchTopTracks(token);
+  }
+};
+
+function fetchTopTracks(token) {
+  fetch('https://api.spotify.com/v1/me/top/tracks?limit=10&time_range=medium_term', {
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  })
+  .then(res => res.json())
+  .then(data => {
+    const list = document.getElementById('trackList');
+    list.innerHTML = '';
+    data.items.forEach((track, index) => {
+      const li = document.createElement('li');
+      li.textContent = `${index + 1}. ${track.name} by ${track.artists.map(a => a.name).join(', ')}`;
+      list.appendChild(li);
+    });
+  })
+  .catch(err => {
+    console.error('Error fetching top tracks', err);
+  });
+}
+</script>
+</body>
+</html>

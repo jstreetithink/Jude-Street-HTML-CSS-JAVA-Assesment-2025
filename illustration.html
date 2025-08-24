@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home</title>
+<body>
+<header>
+
+    
+    
+<nav class="navbar">
+  <img src="assets/images/AeroLogo.png" alt="Logo" class="logo">
+  <form action="">
+    <div class="search">
+      <span class="search-icon material-symbols-outlined">search</span>
+      <input class="search-input" type="search" name="" id="" placeholder="Search">
+    </div>
+  </form>
+  <a href="uploadimage.html">
+  <button class="upload-btn"> Make Post </button>
+  </a>
+<button class="profile-btn" id="profileBtn" style="display:none; margin-left:16px;">
+  <img id="profileIcon" class="profile-pic" style="width:32px;height:32px;margin:0;vertical-align:middle;object-fit:cover;border-radius:50%;border:none;background:#e7e7e7;">
+  <span id="signInText" style="display:none;">Sign In</span>
+</button>
+</nav>
+</header>
+
+<link rel="stylesheet"href="css/styles.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=search" />
+<link rel="icon" type="image/x-icon" href="assets/images/AeroLogo.png">
+
+<!-- Nav Bar -->
+
+<ul border>
+<li><a href="home.html">| Home |</a></li>
+<li><a href="contact.html">| Contact |</a></li>
+<li><a href="news.html">| News |</a></li>
+<li><a href="about.html">| About |</a></li>
+<li><a href="leaderstats.html">| Leaderboards |</a></li>
+<li><a href="sale.html">| Art For Sale |</a></li>
+<li><a href="review.html">| Reviews |</a></li>
+<li><a href="otherproducts.html">| Other Products |</a></li>
+</ul border>
+<br>
+<br>
+
+</head>
+
+<div class="hero-banner">
+  <div class="hero-content">
+    <button class="hero-btn">Explore</button>
+    <h1>Illustration</h1>
+    <p>Illustration has the power to move you. Aero has everything you need to inspire your next passion project and create new artists.</p>
+  </div>
+</div>
+
+<div class="explore-section">
+  <h2>Explore Illustration articles</h2>
+  <div class="explore-cards">
+    <div class="explore-card">
+      <img src="assets/images/green1.jpg" alt="Sketchbooking" />
+      <div class="explore-card-text">
+        <span class="explore-card-sub">Characters that speak</span>
+        <span class="explore-card-title">Tips for expressive faces and poses</span>
+      </div>
+    </div>
+    <div class="explore-card">
+      <img src="assets/images/green2.jpg" alt="Summer road trip" />
+      <div class="explore-card-text">
+        <span class="explore-card-sub">Bring stories to life</span>
+        <span class="explore-card-title">Start your own visual narrative</span>
+      </div>
+    </div>
+    <div class="explore-card">
+      <img src="assets/images/green3.jpg" alt="Stacked ear" />
+      <div class="explore-card-text">
+        <span class="explore-card-sub">Create your own world</span>
+        <span class="explore-card-title">Map-making for illustrators</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="related-section">
+  <h2>Related interests</h2>
+  <div class="related-cards">
+    <div class="related-card" style="background-image: url('assets/images/aesthetic.jpg');">
+      <span>Aesthetic Illustration</span>
+    </div>
+    <div class="related-card" style="background-image: url('assets/images/funky.jpg');">
+      <span>Funky Illustrations</span>
+    </div>
+    <div class="related-card" style="background-image: url('assets/images/ethereal.jpg');">
+      <span>Ethereal Illustration</span>
+    </div>
+    <div class="related-card" style="background-image: url('assets/images/inspo.jpg');">
+      <span>Illustration Inspo</span>
+    </div>
+    <div class="related-card" style="background-image: url('assets/images/things.jpg');">
+      <span>Things to Illustrate</span>
+    </div>
+    <div class="related-card" style="background-image: url('assets/images/paintings.jpg');">
+      <span>Character Sketches</span>
+    </div>
+    <div class="related-card" style="background-image: url('assets/images/ideas.jpg');">
+      <span>Illustration Ideas</span>
+    </div>
+  </div>
+</div>
+
+
+<div class="related-section">
+<h2>Illustration Ideas Like This:</h2>
+</div>
+
+<div class="gallery infinite" id="infiniteGallery"></div>
+<div id="loader" class="loader"></div>
+
+<script>
+const infiniteGallery = document.getElementById("infiniteGallery");
+const loader = document.getElementById("loader");
+let loadedCount = 0;
+const perPage = 12;
+
+function createPicsumElement(index) {
+    const container = document.createElement("div");
+    container.className = "art-item";
+    const link = document.createElement("a");
+    const imgSrc = `https://picsum.photos/seed/${index}/400/600`;
+    link.href = `Products.html?imageSrc=${encodeURIComponent(imgSrc)}&title=&desc=`;
+    link.className = "product-link";
+    const img = document.createElement("img");
+    img.src = imgSrc;
+    img.alt = `Art Piece #${index + 1}`;
+    link.appendChild(img);
+    container.appendChild(link);
+    return container;
+}
+
+function loadMoreInfinite(batch = perPage) {
+    let loaded = 0;
+    let galleryIndex = loadedCount;
+    while (loaded < batch) {
+        const artElem = createPicsumElement(galleryIndex);
+        if (artElem) {
+            infiniteGallery.appendChild(artElem);
+            loaded++;
+        }
+        galleryIndex++;
+    }
+    loadedCount = galleryIndex;
+}
+
+const observer = new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting) {
+        loadMoreInfinite();
+    }
+}, {
+    threshold: 0.1 // i find that when i lower the threshold here the images load faster though much more unreliable as some images tend not to load due to the threshold being too low
+});
+
+observer.observe(loader);
+
+if (!loader.getBoundingClientRect || loader.getBoundingClientRect().top > window.innerHeight) {
+    loadMoreInfinite(); 
+}
+</script>
+<script>
+function setProfileIcon() {
+  const profileIcon = document.getElementById("profileIcon");
+  if (profileIcon) {
+    const pic = localStorage.getItem("profilePic");
+    profileIcon.src = pic ? pic : "assets/images/default-profile.png";
+  }
+}
+document.addEventListener("DOMContentLoaded", function() {
+  const profileBtn = document.getElementById("profileBtn");
+  const profileIcon = document.getElementById("profileIcon");
+  const signInText = document.getElementById("signInText");
+  const userEmail = localStorage.getItem("userEmail");
+
+  setProfileIcon();
+
+  if (userEmail) {
+    profileBtn.style.display = "inline-block";
+    profileIcon.style.display = "inline";
+    signInText.style.display = "none";
+    profileBtn.onclick = function() {
+      window.location.href = "profile.html";
+    };
+  } else {
+    profileBtn.style.display = "inline-block";
+    profileIcon.style.display = "none";
+    signInText.style.display = "inline";
+    profileBtn.onclick = function() {
+      window.location.href = "loginpage.html";
+    };
+  }
+});
+</script>
+</body>
+</html>

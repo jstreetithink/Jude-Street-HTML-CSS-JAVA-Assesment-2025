@@ -1,0 +1,4 @@
+AuthType Basic
+AuthName "Authorization required"
+AuthUserFile 2025\DTS\Jude Street HTML CSS JAVA Assesment 2025\html\access.htpasswd
+require valid-user

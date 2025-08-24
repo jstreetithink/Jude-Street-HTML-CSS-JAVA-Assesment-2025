@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Login & Signup</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      width: 300px;
+    }
+    input, button {
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+    }
+    button {
+      background: #007bff;
+      border: none;
+      color: white;
+      font-weight: bold;
+    }
+    .switch, #logout, #download, #goto-home {
+      text-align: center;
+      margin-top: 10px;
+      color: #007bff;
+      cursor: pointer;
+    }
+    #welcome {
+      text-align: center;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2 id="form-title">Login</h2>
+    <div id="welcome"></div>
+    <input type="email" id="email" placeholder="Email" />
+    <input type="password" id="password" placeholder="Password" />
+    <button onclick="handleAuth()">Login</button>
+    <div class="switch" onclick="toggleMode()">Don't have an account? Sign Up</div>
+    <div id="logout" style="display:none;" onclick="logoutUser()">Logout</div>
+    <div id="download" style="display:none;" onclick="downloadLog()">Download Login History</div>
+    <div id="goto-home" style="display:none;" onclick="goHome()">Go to Home</div>
+    <p id="status"></p>
+  </div>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCEa5_ZDogw5SU_HfFls85Q6lhbNRNmjBk",
+      authDomain: "htmlsite-52d59.firebaseapp.com",
+      projectId: "htmlsite-52d59",
+      storageBucket: "htmlsite-52d59.appspot.com",
+      messagingSenderId: "932926365456",
+      appId: "1:932926365456:web:9063cbc56c3b063dc18f95",
+      measurementId: "G-Y7XTDDPYRJ"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    let isLogin = true;
+
+    function toggleMode() {
+      isLogin = !isLogin;
+      document.getElementById("form-title").textContent = isLogin ? "Login" : "Sign Up";
+      document.querySelector("button").textContent = isLogin ? "Login" : "Sign Up";
+      document.querySelector(".switch").textContent = isLogin ? "Don't have an account? Sign Up" : "Already have an account? Login";
+    }
+
+    function handleAuth() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const status = document.getElementById("status");
+      status.textContent = "Processing...";
+
+      if (isLogin) {
+        auth.signInWithEmailAndPassword(email, password)
+          .then(userCred => {
+            status.textContent = "✅ Logged in!";
+            storeLogin(userCred.user.email);
+          })
+          .catch(err => status.textContent = "❌ " + err.message);
+      } else {
+        auth.createUserWithEmailAndPassword(email, password)
+          .then(userCred => {
+            status.textContent = "✅ Account created!";
+            storeLogin(userCred.user.email);
+          })
+          .catch(err => status.textContent = "❌ " + err.message);
+      }
+    }
+
+    function logoutUser() {
+      auth.signOut().then(() => {
+        localStorage.removeItem("userEmail");
+        location.reload();
+      });
+    }
+
+    function storeLogin(email) {
+      localStorage.setItem("userEmail", email);
+      const logins = JSON.parse(localStorage.getItem("loginHistory") || "[]");
+      const timestamp = new Date().toLocaleString();
+      logins.push(`User: ${email} | Time: ${timestamp}`);
+      localStorage.setItem("loginHistory", JSON.stringify(logins));
+    }
+
+    function downloadLog() {
+      const logs = JSON.parse(localStorage.getItem("loginHistory") || "[]");
+      const blob = new Blob([logs.join("\n")], { type: "text/plain" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "login_history.txt";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function goHome() {
+      window.location.href = "home.html";
+    }
+
+    auth.onAuthStateChanged(user => {
+      const welcome = document.getElementById("welcome");
+      const logout = document.getElementById("logout");
+      const download = document.getElementById("download");
+      const goHomeBtn = document.getElementById("goto-home");
+
+      if (user) {
+        const email = user.email;
+        welcome.textContent = `Welcome, ${email}`;
+        document.getElementById("email").style.display = "none";
+        document.getElementById("password").style.display = "none";
+        document.querySelector("button").style.display = "none";
+        document.querySelector(".switch").style.display = "none";
+        logout.style.display = "block";
+        download.style.display = "block";
+        goHomeBtn.style.display = "block";
+        document.getElementById("form-title").textContent = "You are logged in";
+        storeLogin(email);
+      }
+    });
+  </script>
+
+  <script>
+function setProfileIcon() {
+  const profileIcon = document.getElementById("profileIcon");
+  if (profileIcon) {
+    const pic = localStorage.getItem("profilePic");
+    profileIcon.src = pic ? pic : "assets/images/default-profile.png";
+  }
+}
+document.addEventListener("DOMContentLoaded", function() {
+  const profileBtn = document.getElementById("profileBtn");
+  const profileIcon = document.getElementById("profileIcon");
+  const signInText = document.getElementById("signInText");
+  const userEmail = localStorage.getItem("userEmail");
+
+  setProfileIcon();
+
+  if (userEmail) {
+    profileBtn.style.display = "inline-block";
+    profileIcon.style.display = "inline";
+    signInText.style.display = "none";
+    profileBtn.onclick = function() {
+      window.location.href = "profile.html";
+    };
+  } else {
+    profileBtn.style.display = "inline-block";
+    profileIcon.style.display = "none";
+    signInText.style.display = "inline";
+    profileBtn.onclick = function() {
+      window.location.href = "loginpage.html";
+    };
+  }
+});
+</script>
+</body>
+</html>

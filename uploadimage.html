@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home</title>
+<body>
+<header>
+    
+<nav class="navbar">
+  <img src="assets/images/AeroLogo.png" alt="Logo" class="logo">
+  <form action="">
+    <div class="search">
+      <span class="search-icon material-symbols-outlined">search</span>
+      <input class="search-input" type="search" name="" id="" placeholder="Search">
+    </div>
+  </form>
+  <a href="uploadimage.html">
+  <button class="upload-btn"> Make Post </button>
+  </a>
+<button class="profile-btn" id="profileBtn" style="display:none; margin-left:16px;">
+  <img id="profileIcon" class="profile-pic" style="width:32px;height:32px;margin:0;vertical-align:middle;object-fit:cover;border-radius:50%;border:none;background:#e7e7e7;">
+  <span id="signInText" style="display:none;">Sign In</span>
+</button>
+</nav>
+</header>
+
+<link rel="stylesheet"href="css/styles.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=search" />
+<link rel="icon" type="image/x-icon" href="assets/images/AeroLogo.png">
+
+<!-- Nav Bar -->
+
+<ul border>
+<li><a href="home.html">| Home |</a></li>
+<li><a href="contact.html">| Contact |</a></li>
+<li><a href="news.html">| News |</a></li>
+<li><a href="about.html">| About |</a></li>
+<li><a href="leaderstats.html">| Leaderboards |</a></li>
+<li><a href="sale.html">| Art For Sale |</a></li>
+<li><a href="review.html">| Reviews |</a></li>
+<li><a href="otherproducts.html">| Other Products |</a></li>
+</ul border>
+<br>
+<br>
+
+<form id="uploadForm" autocomplete="off">
+  <div id="dropZone" class="drop-zone">
+    <span class="drop-zone-text">Drag & Drop your image here or click to select</span>
+    <input type="file" id="myFile" name="filename" accept="image/*" required style="display:none;">
+    <img id="preview" src="#" alt="Image Preview" style="display:none; max-width:300px; margin-top:16px; border-radius:12px;"/>
+  </div>
+  <br>
+  <input type="text" id="imageTitle" placeholder="Enter image title" required style="margin-bottom:8px;display:block;">
+  <textarea id="imageDesc" placeholder="Enter image description" required style="margin-bottom:8px;display:block;"></textarea>
+  <!-- Add this below your description textarea -->
+  <label for="imageHashtags">Hashtags (comma or space separated)</label>
+  <input type="text" id="imageHashtags" placeholder="#art, #cool, #example" style="margin-bottom:8px;display:block;">
+  <button class="upload-btn" type="submit">Upload Image</button>
+</form>
+
+<button id="resetImages" class="reset-btn" type="button" style="margin-top:16px;">Reset Uploaded Images (Client side only *FOR YOU)</button>
+<script>
+    document.getElementById('resetImages').addEventListener('click', function() {
+  // Remove all userImage-N keys and reset the counter
+  let nextId = parseInt(localStorage.getItem('nextUserImageId') || '1', 10);
+  for (let i = 1; i < nextId; i++) {
+    localStorage.removeItem('userImage-' + i);
+  }
+  localStorage.setItem('nextUserImageId', '1');
+  alert('All uploaded images have been reset!');
+});
+</script>
+
+<script>
+document.getElementById('myFile').addEventListener('change', function(event) {
+  const preview = document.getElementById('preview');
+  const file = event.target.files[0];
+  if (file && file.type.startsWith('image/')) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      preview.src = e.target.result;
+      preview.style.display = 'block';
+    }
+    reader.readAsDataURL(file);
+  } else {
+    preview.src = '#';
+    preview.style.display = 'none';
+  }
+});
+
+// Save image to localStorage on form submit
+document.getElementById('uploadForm').addEventListener('submit', function(event) {
+  event.preventDefault();
+  const fileInput = document.getElementById('myFile');
+  const file = fileInput.files[0];
+  const title = document.getElementById('imageTitle').value.trim();
+  const desc = document.getElementById('imageDesc').value.trim();
+  const hashtagsRaw = document.getElementById('imageHashtags').value.trim();
+  // Split hashtags by comma or space, remove empty, and ensure they start with #
+  const hashtags = hashtagsRaw
+    .split(/[\s,]+/)
+    .map(tag => tag.startsWith('#') ? tag : '#' + tag)
+    .filter(tag => tag.length > 1);
+
+  if (file && file.type.startsWith('image/') && title && desc) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      let nextId = parseInt(localStorage.getItem('nextUserImageId') || '1', 10);
+      const userEmail = localStorage.getItem("userEmail") || "Anonymous";
+      localStorage.setItem('userImage-' + nextId, JSON.stringify({
+        src: e.target.result,
+        title: title,
+        desc: desc,
+        hashtags: hashtags,
+        email: userEmail
+      }));
+      localStorage.setItem('nextUserImageId', nextId + 1);
+      alert('Image uploaded! It will appear in the gallery.');
+      fileInput.value = '';
+      document.getElementById('preview').style.display = 'none';
+      document.getElementById('imageTitle').value = '';
+      document.getElementById('imageDesc').value = '';
+      document.getElementById('imageHashtags').value = '';
+    }
+    reader.readAsDataURL(file);
+  }
+});
+</script>
+</body>
+    
+
+
+
+<script>
+const dropZone = document.getElementById('dropZone');
+const fileInput = document.getElementById('myFile');
+const preview = document.getElementById('preview');
+
+// Click drop zone to open file dialog
+dropZone.addEventListener('click', () => fileInput.click());
+
+// Drag events
+dropZone.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  dropZone.classList.add('dragover');
+});
+dropZone.addEventListener('dragleave', (e) => {
+  e.preventDefault();
+  dropZone.classList.remove('dragover');
+});
+dropZone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropZone.classList.remove('dragover');
+  if (e.dataTransfer.files.length) {
+    fileInput.files = e.dataTransfer.files;
+    showPreview(fileInput.files[0]);
+  }
+});
+
+// Show preview when file selected
+fileInput.addEventListener('change', function(event) {
+  if (fileInput.files.length) {
+    showPreview(fileInput.files[0]);
+  }
+});
+
+function showPreview(file) {
+  if (file && file.type.startsWith('image/')) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      preview.src = e.target.result;
+      preview.style.display = 'block';
+    }
+    reader.readAsDataURL(file);
+  } else {
+    preview.src = '#';
+    preview.style.display = 'none';
+  }
+}
+
+</script>
+<script>
+function setProfileIcon() {
+  const profileIcon = document.getElementById("profileIcon");
+  if (profileIcon) {
+    const pic = localStorage.getItem("profilePic");
+    profileIcon.src = pic ? pic : "assets/images/default-profile.png";
+  }
+}
+document.addEventListener("DOMContentLoaded", function() {
+  const profileBtn = document.getElementById("profileBtn");
+  const profileIcon = document.getElementById("profileIcon");
+  const signInText = document.getElementById("signInText");
+  const userEmail = localStorage.getItem("userEmail");
+
+  setProfileIcon();
+
+  if (userEmail) {
+    profileBtn.style.display = "inline-block";
+    profileIcon.style.display = "inline";
+    signInText.style.display = "none";
+    profileBtn.onclick = function() {
+      window.location.href = "profile.html";
+    };
+  } else {
+    profileBtn.style.display = "inline-block";
+    profileIcon.style.display = "none";
+    signInText.style.display = "inline";
+    profileBtn.onclick = function() {
+      window.location.href = "loginpage.html";
+    };
+  }
+});
+</script>
+</body>

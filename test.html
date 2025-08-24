@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Explore Art</title>
+  <link rel="stylesheet" href="styles2.css">
+</head>
+<body>
+  <h1 class="title">Explore Art</h1>
+  <div class="gallery" id="gallery"></div>
+  <button id="loadMoreBtn" class="load-more">Load More</button>
+  <div id="loader" class="loader"></div>
+
+  <script>
+    const gallery = document.getElementById("gallery");
+    const loader = document.getElementById("loader");
+    const loadMoreBtn = document.getElementById("loadMoreBtn");
+    let page = 0;
+    const perPage = 20;
+    const maxItems = 100;
+
+    function createArtElement(id) {
+      const container = document.createElement("div");
+      container.className = "art-item";
+
+      const img = document.createElement("canvas");
+      img.src = `https://picsum.photos/seed/${id}/400/600`;
+      img.alt = `Art Piece #${id + 1}`;
+
+      const caption = document.createElement("div");
+      caption.className = "caption";
+      caption.textContent = `Art Piece #${id + 1}`;
+
+      container.appendChild(img);
+      container.appendChild(caption);
+
+      return container;
+    }
+
+    function loadMore() {
+      const currentItemCount = page * perPage;
+      if (currentItemCount >= maxItems) {
+        loadMoreBtn.style.display = "block";
+        return;
+      }
+
+      for (let i = 0; i < perPage && currentItemCount + i < maxItems; i++) {
+        const art = createArtElement(currentItemCount + i);
+        gallery.appendChild(art);
+      }
+      page++;
+    }
+
+    loadMoreBtn.addEventListener("click", () => {
+      loadMoreBtn.style.display = "none";
+      loadMore();
+    });
+
+    const observer = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && page * perPage < maxItems) {
+        loadMore();
+      }
+    }, {
+      threshold: 1
+    });
+
+    observer.observe(loader);
+    loadMore();
+  </script>
+</body>
+</html>

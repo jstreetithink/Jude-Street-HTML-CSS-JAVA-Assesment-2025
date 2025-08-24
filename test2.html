@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="css/styles.css"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=search"/>
+  <title>Product Page</title>
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <img src="assets/images/AeroLogo.png" alt="Logo" class="logo">
+      <form action="">
+        <div class="search">
+          <span class="search-icon material-symbols-outlined">search</span>
+          <input class="search-input" type="search" placeholder="Search" />
+        </div>
+      </form>
+    </nav>
+  </header>
+
+  <!-- Navigation Bar -->
+  <ul>
+    <li><a href="home.html">| Home |</a></li>
+    <li><a href="contact.html">| Contact |</a></li>
+    <li><a href="news.html">| News |</a></li>
+    <li><a href="about.html">| About |</a></li>
+    <li><a href="leaderstats.html">| Leaderboards |</a></li>
+    <li><a href="sale.html">| Art For Sale |</a></li>
+    <li><a href="review.html">| Reviews |</a></li>
+    <li><a href="otherproducts.html">| Other Products |</a></li>
+  </ul>
+
+  <br />
+
+  <div class="container">
+    <div class="image">
+      <!-- ✅ This image now loads -->
+      <img id="productImage" src="https://picsum.photos/seed/0/400/600" alt="Product Image" width="700" height="700" style="border: #462521 3px outset; margin-left: 147px;">
+    </div>
+
+    <div class="text">
+      <h1>Art Title Placeholder</h1>
+      <p>Short Description Placeholder</p>
+      <p>Hashtag Placements</p>
+      <ul></ul>
+      <p>From User: #####</p>
+
+<!-- Like Button and Counter (HTML) -->
+<button onclick="react()">👍 Like</button>
+<p id="like-count">Likes: <span id="like-count-value">0</span></p>
+
+<!-- Per-Product Reaction Script -->
+<script>
+  // Get a unique identifier for the product
+  // Here, we're using the image src to uniquely identify the product
+  const productId = document.getElementById('productImage').src;
+
+  const reactedKey = 'reacted-' + productId;
+  const countKey = 'count-' + productId;
+
+  function react() {
+    if (localStorage.getItem(reactedKey)) {
+      alert("You already reacted to this product.");
+      return;
+    }
+
+    localStorage.setItem(reactedKey, 'true');
+
+    let count = parseInt(localStorage.getItem(countKey) || '0', 10);
+    count += 1;
+    localStorage.setItem(countKey, count);
+
+    document.getElementById('like-count-value').textContent = count;
+  }
+
+  // Restore like count on page load
+  window.addEventListener('DOMContentLoaded', () => {
+    const count = localStorage.getItem(countKey) || '0';
+    document.getElementById('like-count-value').textContent = count;
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Profile</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=search" />
+    <link rel="icon" type="image/x-icon" href="assets/images/AeroLogo.png">
+  
+  <style>
+    .profile-container {
+      max-width: 400px;
+      margin: 40px auto;
+      padding: 32px;
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 4px 24px rgba(56,104,106,0.10);
+      text-align: center;
+    }
+    .profile-pic {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #A3B4A2;
+      margin-bottom: 16px;
+      background: #e7e7e7;
+    }
+    .profile-email {
+      font-size: 1.1rem;
+      margin-bottom: 24px;
+      color: #38686A;
+      font-weight: bold;
+    }
+    .profile-upload-label {
+      display: inline-block;
+      margin: 12px 0;
+      padding: 8px 18px;
+      background: #A3B4A2;
+      color: #fff;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.2s;
+    }
+    .profile-upload-label:hover {
+      background: #38686A;
+    }
+    #profilePicInput {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+<header>
+<nav class="navbar">
+  <img src="assets/images/AeroLogo.png" alt="Logo" class="logo">
+  <form action="">
+    <div class="search">
+      <span class="search-icon material-symbols-outlined">search</span>
+      <input class="search-input" type="search" name="" id="" placeholder="Search">
+    </div>
+  </form>
+  <a href="uploadimage.html">
+  <button class="upload-btn"> Make Post </button>
+  </a>
+<button class="profile-btn" id="profileBtn" style="display:none; margin-left:16px;">
+  <img id="profileIcon" class="profile-pic" style="width:32px;height:32px;margin:0;vertical-align:middle;object-fit:cover;border-radius:50%;border:none;background:#e7e7e7;">
+  <span id="signInText" style="display:none;">Sign In</span>
+</button>
+</nav>
+</header>
+
+<ul border>
+<li><a href="home.html">| Home |</a></li>
+<li><a href="contact.html">| Contact |</a></li>
+<li><a href="news.html">| News |</a></li>
+<li><a href="about.html">| About |</a></li>
+<li><a href="leaderstats.html">| Leaderboards |</a></li>
+<li><a href="sale.html">| Art For Sale |</a></li>
+<li><a href="review.html">| Reviews |</a></li>
+<li><a href="otherproducts.html">| Other Products |</a></li>
+</ul border>
+<br>
+<br>
+
+  <div class="profile-container">
+    <h2>My Profile</h2>
+    <img id="profilePic" class="profile-pic" src="assets/images/default-profile.png" alt="Profile Picture">
+    <div>
+      <label for="profilePicInput" class="profile-upload-label">Change Profile Picture</label>
+      <input type="file" id="profilePicInput" accept="image/*">
+    </div>
+    <div class="profile-email" id="profileEmail"></div>
+    <button id="signOutBtn" class="profile-upload-label" style="background:#e74c3c;margin-top:18px;">Sign Out</button>
+  </div>
+
+  <script>
+    // Show email
+    const email = localStorage.getItem("userEmail") || "Not signed in";
+    document.getElementById("profileEmail").textContent = email;
+
+    // Load profile picture from localStorage if exists
+    function setProfilePic(imgEl) {
+      const pic = localStorage.getItem("profilePic");
+      if (pic) {
+        imgEl.src = pic;
+      } else {
+        imgEl.src = "assets/images/default-profile.jpg";
+      }
+    }
+    setProfilePic(document.getElementById("profilePic"));
+    setProfilePic(document.getElementById("profileIcon"));
+
+    // Handle profile picture upload
+    document.getElementById("profilePicInput").addEventListener("change", function(e) {
+      const file = e.target.files[0];
+      if (file && file.type.startsWith("image/")) {
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+          localStorage.setItem("profilePic", ev.target.result);
+          setProfilePic(document.getElementById("profilePic"));
+          setProfilePic(document.getElementById("profileIcon"));
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Navbar button logic (same as on other pages)
+    document.addEventListener("DOMContentLoaded", function() {
+      const profileBtn = document.getElementById("profileBtn");
+      const profileIcon = document.getElementById("profileIcon");
+      const signInText = document.getElementById("signInText");
+      const userEmail = localStorage.getItem("userEmail");
+
+      profileBtn.style.display = "inline-block";
+      if (userEmail) {
+        profileIcon.style.display = "inline";
+        signInText.style.display = "none";
+        profileBtn.onclick = function() {
+          window.location.href = "profile.html";
+        };
+      } else {
+        profileIcon.style.display = "none";
+        signInText.style.display = "inline";
+        profileBtn.onclick = function() {
+          window.location.href = "loginpage.html";
+        };
+      }
+    });
+
+document.getElementById("signOutBtn").onclick = function() {
+  localStorage.removeItem("userEmail");
+  window.location.href = "loginpage.html";
+};
+  </script>
+  
+
+  <script>
+function setProfileIcon() {
+  const profileIcon = document.getElementById("profileIcon");
+  if (profileIcon) {
+    const pic = localStorage.getItem("profilePic");
+    profileIcon.src = pic ? pic : "assets/images/default-profile.png";
+  }
+}
+document.addEventListener("DOMContentLoaded", function() {
+  const profileBtn = document.getElementById("profileBtn");
+  const profileIcon = document.getElementById("profileIcon");
+  const signInText = document.getElementById("signInText");
+  const userEmail = localStorage.getItem("userEmail");
+
+  setProfileIcon();
+
+  if (userEmail) {
+    profileBtn.style.display = "inline-block";
+    profileIcon.style.display = "inline";
+    signInText.style.display = "none";
+    profileBtn.onclick = function() {
+      window.location.href = "profile.html";
+    };
+  } else {
+    profileBtn.style.display = "inline-block";
+    profileIcon.style.display = "none";
+    signInText.style.display = "inline";
+    profileBtn.onclick = function() {
+      window.location.href = "loginpage.html";
+    };
+  }
+});
+</script>
+</body>
+</html>
