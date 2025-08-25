@@ -1346,4 +1346,80 @@ button:disabled {
   font-size: 1.4rem;
 }
 
+.open-chat-btn {
+  position: fixed;
+  bottom: 28px;
+  left: 28px;
+  z-index: 1000;
+  background: linear-gradient(90deg, #34495E 60%, #34495E 100%);
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  padding: 14px 24px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  box-shadow: 0 4px 16px rgba(56,104,106,0.18);
+  cursor: pointer;
+  transition:  0.2s, box-shadow 0.2s;
+}
+.open-chat-btn:hover {
+  background: linear-gradient(90deg, #34495E 60%, #34495E 100%);
+  box-shadow: 0 8px 24px rgba(56,104,106,0.22);
+}
 
+/* Chat Popup */
+.chat-popup {
+  display: none;
+  position: fixed;
+  bottom: 90px;
+  left: 28px;
+  border: 2px solid #34495E;
+  border-radius: 18px;
+  z-index: 1001;
+  background-color: #f9f9f9;
+  min-width: 320px;
+  max-width: 90vw;
+  box-shadow: 0 8px 32px rgba(56,104,106,0.18);
+  animation: fadeInUp 0.25s;
+}
+@keyframes fadeInUp {
+  from { transform: translateY(40px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.form-container {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.form-container h1 {
+  margin: 0 0 8px 0;
+  font-size: 1.2rem;
+  color: #38686A;
+}
+.form-container textarea {
+  width: 100%;
+  min-height: 60px;
+  border-radius: 8px;
+  border: 1px solid #34495E;
+  padding: 8px;
+  resize: vertical;
+  font-size: 1rem;
+}
+.form-container .btn {
+  background: #34495E;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  margin-top: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+.form-container .btn.cancel {
+  background: #34495E;
+}
+.form-container .btn:hover {
+  background: #38686A;
+}

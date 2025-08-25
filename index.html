@@ -286,6 +286,7 @@ loadMoreBtn.addEventListener("click", () => {
 </div>
   <p>&copy; 2025 Aero Art. All rights reserved. is what i would say if i owned it but nope</p>
   <p> all images on site are copyright and royalty free</p>
+
 </footer>
 
 <script>
@@ -318,6 +319,27 @@ document.addEventListener("DOMContentLoaded", function() {
     profileBtn.onclick = function() {
       window.location.href = "loginpage.html";
     };
+  }
+});
+</script>
+<button class="open-chat-btn" id="chatToggleBtn">💬 Chat</button>
+
+<div class="chat-popup" id="myForm">
+  <form action="/action_page.php" class="form-container" onsubmit="event.preventDefault();">
+    <h1>Chat</h1>
+    <label for="msg"><b>Message</b></label>
+    <textarea placeholder="Type message.." name="msg" required></textarea>
+    <button type="submit" class="btn">Send</button>
+    <!-- Removed the Close button -->
+  </form>
+</div>
+<script>
+document.getElementById("chatToggleBtn").addEventListener("click", function() {
+  const chatBox = document.getElementById("myForm");
+  if (chatBox.style.display === "block") {
+    chatBox.style.display = "none";
+  } else {
+    chatBox.style.display = "block";
   }
 });
 </script>
