@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aero - Art For All</title>
+<body>
+<header>
+
+    
+    
+<nav class="navbar">
+  <img src="assets/images/AeroLogo.png" alt="Logo" class="logo">
+  <form action="">
+    <div class="search">
+      <span class="search-icon material-symbols-outlined">search</span>
+      <input class="search-input" type="search" name="" id="" placeholder="Search">
+    </div>
+  </form>
+  <a href="uploadimage.html">
+  <button class="upload-btn"> Make Post </button>
+  </a>
+<button class="profile-btn" id="profileBtn" style="display:none;">
+  <img id="profileIcon" class="profile-pic">
+  <span id="signInText" style="display:none;">Sign In</span>
+</button>
+</button>
+</nav>
+</header>
+
+<link rel="stylesheet"href="css/styles.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=search" />
+<link rel="icon" type="image/x-icon" href="assets/images/AeroLogo.png">
+
+<!-- Nav Bar -->
+
+<ul>
+<li><a href="home.html">| Home |</a></li>
+<li><a href="contact.html">| Contact |</a></li>
+<li><a href="news.html">| News |</a></li>
+<li><a href="about.html">| About |</a></li>
+<li><a href="sale.html">| Art For Sale |</a></li>
+<li><a href="review.html">| Reviews |</a></li>
+<li><a href="otherproducts.html">| Other Products |</a></li>
+</ul>
+<br>
+<br>
+
+</head>
+<body>
+
+  <div class="hero-banner">
+  <div class="hero-content">
+    <button class="hero-btn">Explore</button>
+    <h1>Reviews</h1>
+    <p>Aero has the power to move you. Aero has everything you need to inspire your next project and discover new artists. Here are some reviews.</p>
+  </div>
+</div>
+
+<!-- Add icon library -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<div class="review-section">
+  <!-- your review content here -->
+<span class="heading">User Rating</span>
+<span class="fa fa-star checked"></span>
+<span class="fa fa-star checked"></span>
+<span class="fa fa-star checked"></span>
+<span class="fa fa-star checked"></span>
+<span class="fa fa-star"></span>
+<p>4.1 average based on 254 reviews.</p>
+<hr style="border:3px solid #f1f1f1">
+
+<div class="row">
+  <div class="side">
+    <div>5 star</div>
+  </div>
+  <div class="middle">
+    <div class="bar-container">
+      <div class="bar-5"></div>
+    </div>
+  </div>
+  <div class="side right">
+    <div>150</div>
+  </div>
+  <div class="side">
+    <div>4 star</div>
+  </div>
+  <div class="middle">
+    <div class="bar-container">
+      <div class="bar-4"></div>
+    </div>
+  </div>
+  <div class="side right">
+    <div>63</div>
+  </div>
+  <div class="side">
+    <div>3 star</div>
+  </div>
+  <div class="middle">
+    <div class="bar-container">
+      <div class="bar-3"></div>
+    </div>
+  </div>
+  <div class="side right">
+    <div>15</div>
+  </div>
+  <div class="side">
+    <div>2 star</div>
+  </div>
+  <div class="middle">
+    <div class="bar-container">
+      <div class="bar-2"></div>
+    </div>
+  </div>
+  <div class="side right">
+    <div>6</div>
+  </div>
+  <div class="side">
+    <div>1 star</div>
+  </div>
+  <div class="middle">
+    <div class="bar-container">
+      <div class="bar-1"></div>
+    </div>
+  </div>
+  <div class="side right">
+    <div>20</div>
+  </div>
+</div>
+</div>
+
+
+<footer class="site-footer">
+  <div class="pagebuttons">
+  <a href="#">&laquo;</a>
+  <a href="#">1</a>
+  <a href="#">2</a>
+  <a href="#">3</a>
+  <a href="#">4</a>
+  <a href="#">5</a>
+  <a href="#">6</a>
+  <a href="#">&raquo;</a>
+</div>
+  <p>&copy; 2025 Aero Art. All rights reserved. is what i would say if i owned it but nope</p>
+  <p> all images on site are copyright and royalty free</p>
+
+</footer>
+
+<script>
+function setProfileIcon() {
+  const profileIcon = document.getElementById("profileIcon");
+  if (profileIcon) {
+    const pic = localStorage.getItem("profilePic");
+    profileIcon.src = pic ? pic : "assets/images/default-profile.png";
+  }
+}
+document.addEventListener("DOMContentLoaded", function() {
+  const profileBtn = document.getElementById("profileBtn");
+  const profileIcon = document.getElementById("profileIcon");
+  const signInText = document.getElementById("signInText");
+  const userEmail = localStorage.getItem("userEmail");
+
+  setProfileIcon();
+
+  if (userEmail) {
+    profileBtn.style.display = "inline-block";
+    profileIcon.style.display = "inline";
+    signInText.style.display = "none";
+    profileBtn.onclick = function() {
+      window.location.href = "profile.html";
+    };
+  } else {
+    profileBtn.style.display = "inline-block";
+    profileIcon.style.display = "none";
+    signInText.style.display = "inline";
+    profileBtn.onclick = function() {
+      window.location.href = "loginpage.html";
+    };
+  }
+});
+</script>
+<button class="open-chat-btn" id="chatToggleBtn">💬 Chat</button>
+
+<div class="chat-popup" id="myForm">
+  <form action="/action_page.php" class="form-container" onsubmit="event.preventDefault();">
+    <h1>Chat</h1>
+    <label for="msg"><b>Message</b></label>
+    <textarea placeholder="Type message.." name="msg" required></textarea>
+    <button type="submit" class="btn">Send</button>
+  </form>
+</div>
+<script>
+document.getElementById("chatToggleBtn").addEventListener("click", function() {
+  const chatBox = document.getElementById("myForm");
+  if (chatBox.style.display === "block") {
+    chatBox.style.display = "none";
+  } else {
+    chatBox.style.display = "block";
+  }
+});
+</script>
+</body>
+</html>
